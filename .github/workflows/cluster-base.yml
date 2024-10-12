@@ -20,6 +20,10 @@ on:
       - synchronize
       - closed
 
+concurrency:
+  cancel-in-progress: false
+  group: cluster-base
+
 jobs:
   namespace_deploy:
     name: Operators Deployment onto Self Hosted K3d Cluster
