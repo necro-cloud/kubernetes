@@ -1,1 +1,3 @@
 .vscode/settings.json
+**/.terraform/**
+**/.terraform.lock.hcl
