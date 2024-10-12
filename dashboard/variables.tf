@@ -16,9 +16,3 @@ variable "service_account_name" {
   description = "Kubernetes Dashboard Admin Service Account"
   type        = string
 }
-
-variable "service_account_name" {
-  default     = "admin-user"
-  description = "Kubernetes Dashboard Admin Service Account"
-  type        = string
-}
