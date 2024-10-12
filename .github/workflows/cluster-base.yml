@@ -8,10 +8,12 @@ on:
       - bug/**
     paths:
       - operators/**
+      - certificates/**
       - .github/workflows/cluster-base.yml
   pull_request:
     paths:
       - operators/**
+      - certificates/**
       - .github/workflows/cluster-base.yml
     branches:
       - main
@@ -25,13 +27,32 @@ concurrency:
   group: cluster-base
 
 jobs:
-  namespace_deploy:
+  operators_deploy:
     name: Operators Deployment onto Self Hosted K3d Cluster
     uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: Operators
       folder_path: operators
       runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+  certificates_deploy:
+    name: Cluster Issuer and MinIO Operator Certificates Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    with:
+      deployment_name: Cluster Issuer and MinIO Operator Certificates
+      folder_path: certificates
+      runners: photoatom
+      post_apply_script: |
+
+        # Sleep for some time to give time for certs creation
+        echo "Sleeping for 30 seconds to give time for certificates creation"
+        sleep 30
+
+        # Restart MinIO Operator Deployment
+        kubectl rollout restart deployments.apps/minio-operator -n minio-operator
+        kubectl rollout status eployments.apps/minio-operator -n minio-operator
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
