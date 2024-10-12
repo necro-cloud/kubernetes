@@ -8,11 +8,13 @@ on:
       - bug/**
     paths:
       - operators/**
+      - dashboard/**
       - certificates/**
       - .github/workflows/cluster-base.yml
   pull_request:
     paths:
       - operators/**
+      - dashboard/**
       - certificates/**
       - .github/workflows/cluster-base.yml
     branches:
@@ -37,8 +39,19 @@ jobs:
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
-  certificates_deploy:
+  dashboard_deploy:
     needs: operators_deploy
+    name: Kubernetes Dashboard Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    with:
+      deployment_name: Kubernetes Dashboard
+      folder_path: dashboard
+      runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+  certificates_deploy:
+    needs: dashboard_deploy
     name: Cluster Issuer and MinIO Operator Certificates Deployment onto Self Hosted K3d Cluster
     uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
     with:
