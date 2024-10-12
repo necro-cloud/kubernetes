@@ -53,7 +53,7 @@ jobs:
 
         # Restart MinIO Operator Deployment
         kubectl rollout restart deployments.apps/minio-operator -n minio-operator
-        kubectl rollout status eployments.apps/minio-operator -n minio-operator
+        kubectl rollout status deployments.apps/minio-operator -n minio-operator
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
