@@ -1,24 +1,24 @@
 // MinIO Operator Configuration
 resource "helm_release" "minio" {
-  name      = "minio-operator"
-  namespace = "minio-operator"
+  name      = var.minio_operator_configuration.name
+  namespace = var.minio_operator_configuration.namespace
 
-  repository       = "https://operator.min.io"
-  chart            = "operator"
-  version          = "6.0.2"
-  create_namespace = true
+  repository       = var.minio_operator_configuration.repository
+  chart            = var.minio_operator_configuration.chart
+  version          = var.minio_operator_configuration.version
+  create_namespace = var.minio_operator_configuration.create_namespace
 
 }
 
 // Cert Manager Operator Configuration
 resource "helm_release" "cert-manager" {
-  name      = "cert-manager"
-  namespace = "cert-manager"
+  name      = var.cert_manager_configuration.name
+  namespace = var.cert_manager_configuration.namespace
 
-  repository       = "https://charts.jetstack.io"
-  chart            = "cert-manager"
-  version          = "v1.16.1"
-  create_namespace = true
+  repository       = var.cert_manager_configuration.repository
+  chart            = var.cert_manager_configuration.chart
+  version          = var.cert_manager_configuration.version
+  create_namespace = var.cert_manager_configuration.create_namespace
 
   set {
     name  = "crds.enabled"
@@ -29,24 +29,24 @@ resource "helm_release" "cert-manager" {
 
 // Cloud Native PG Operator Configuration
 resource "helm_release" "cnpg" {
-  name      = "cnpg"
-  namespace = "cnpg-system"
+  name      = var.cnpg_configuration.name
+  namespace = var.cnpg_configuration.namespace
 
-  repository       = "https://cloudnative-pg.github.io/charts"
-  chart            = "cloudnative-pg"
-  version          = "v0.22.0"
-  create_namespace = true
+  repository       = var.cnpg_configuration.repository
+  chart            = var.cnpg_configuration.chart
+  version          = var.cnpg_configuration.version
+  create_namespace = var.cnpg_configuration.create_namespace
 
 }
 
 // NGINX Ingress Controller Configuration
 resource "helm_release" "nginx" {
-  name      = "nginx"
-  namespace = "ingress-nginx"
+  name      = var.nginx_configuration.name
+  namespace = var.nginx_configuration.namespace
 
-  repository       = "https://kubernetes.github.io/ingress-nginx"
-  chart            = "ingress-nginx"
-  version          = "4.11.2"
-  create_namespace = true
+  repository       = var.nginx_configuration.repository
+  chart            = var.nginx_configuration.chart
+  version          = var.nginx_configuration.version
+  create_namespace = var.nginx_configuration.create_namespace
 
 }
