@@ -1,0 +1,31 @@
+name: Base Automations for Self Hosted K3d Cluster
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/**
+      - bug/**
+    paths:
+      - operators/**
+  pull_request:
+    paths:
+      - operators/**
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - closed
+
+jobs:
+  namespace_deploy:
+    name: Operators Deployment onto Self Hosted K3d Cluster
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    with:
+      deployment_name: Operators
+      folder_path: operators
+      runners: photoatom
+    secrets:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
