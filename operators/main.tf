@@ -26,3 +26,15 @@ resource "helm_release" "cert-manager" {
   }
 
 }
+
+// Cloud Native PG Operator Configuration
+resource "helm_release" "cnpg" {
+  name      = "cnpg"
+  namespace = "cnpg-system"
+
+  repository       = "https://cloudnative-pg.github.io/charts"
+  chart            = "cloudnative-pg"
+  version          = "v0.22.0"
+  create_namespace = true
+
+}
