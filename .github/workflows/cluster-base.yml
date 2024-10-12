@@ -8,9 +8,11 @@ on:
       - bug/**
     paths:
       - operators/**
+      - .github/workflows/cluster-base.yml
   pull_request:
     paths:
       - operators/**
+      - .github/workflows/cluster-base.yml
     branches:
       - main
     types:
