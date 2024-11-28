@@ -29,7 +29,12 @@ resource "kubernetes_manifest" "minio_ca" {
       }
     }
     "spec" = {
-      "isCA"       = true
+      "isCA" = true
+      "subject" = {
+        "organizations"       = ["photoatom"]
+        "countries"           = ["India"]
+        "organizationalUnits" = ["MinIO Operator"]
+      }
       "commonName" = "operator"
       "secretName" = "operator-ca-tls"
       "duration"   = "70128h"
@@ -85,6 +90,12 @@ resource "kubernetes_manifest" "sts_certificate" {
       }
     }
     "spec" = {
+      "subject" = {
+        "organizations"       = ["photoatom"]
+        "countries"           = ["India"]
+        "organizationalUnits" = ["MinIO Operator"]
+      }
+      "commonName" = "sts"
       "dnsNames" = [
         "sts",
         "sts.minio-operator.svc",
