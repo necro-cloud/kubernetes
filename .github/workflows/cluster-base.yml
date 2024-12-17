@@ -58,15 +58,15 @@ jobs:
       deployment_name: Cluster Issuer and MinIO Operator Certificates
       folder_path: certificates
       runners: photoatom
-      post_apply_script: |
-
-        # Sleep for some time to give time for certs creation
-        echo "Sleeping for 30 seconds to give time for certificates creation"
-        sleep 30
-
-        # Restart MinIO Operator Deployment
-        kubectl rollout restart deployments.apps/minio-operator -n minio-operator
-        kubectl rollout status deployments.apps/minio-operator -n minio-operator
+      # post_apply_script: |
+      #
+      #   # Sleep for some time to give time for certs creation
+      #   echo "Sleeping for 30 seconds to give time for certificates creation"
+      #   sleep 30
+      #
+      #   # Restart MinIO Operator Deployment
+      #   kubectl rollout restart deployments.apps/minio-operator -n minio-operator
+      #   kubectl rollout status deployments.apps/minio-operator -n minio-operator
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
