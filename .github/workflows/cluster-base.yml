@@ -36,8 +36,7 @@ jobs:
       deployment_name: Operators
       folder_path: operators
       runners: photoatom
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    secrets: inherit
 
   dashboard_deploy:
     needs: operators_deploy
