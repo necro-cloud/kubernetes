@@ -183,5 +183,5 @@ resource "kubernetes_manifest" "sts_certificate" {
     }
   }
 
-  depends_on = [kubernetes_manifest.cluster_self_signed_issuer]
+  depends_on = [kubernetes_manifest.minio_issuer]
 }
