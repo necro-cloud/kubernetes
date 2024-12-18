@@ -31,7 +31,7 @@ concurrency:
 jobs:
   operators_deploy:
     name: Operators Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@feature/10/tfvars
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: Operators
       folder_path: operators
@@ -41,7 +41,7 @@ jobs:
   dashboard_deploy:
     needs: operators_deploy
     name: Kubernetes Dashboard Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@feature/10/tfvars
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: Kubernetes Dashboard
       folder_path: dashboard
@@ -51,7 +51,7 @@ jobs:
   certificates_deploy:
     needs: dashboard_deploy
     name: Cluster Issuer and MinIO Operator Certificates Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@feature/10/tfvars
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
     with:
       deployment_name: Cluster Issuer and MinIO Operator Certificates
       folder_path: certificates
