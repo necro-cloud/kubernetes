@@ -31,7 +31,7 @@ concurrency:
 jobs:
   operators_deploy:
     name: Operators Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@feature/10/tfvars
     with:
       deployment_name: Operators
       folder_path: operators
@@ -42,31 +42,28 @@ jobs:
   dashboard_deploy:
     needs: operators_deploy
     name: Kubernetes Dashboard Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@feature/10/tfvars
     with:
       deployment_name: Kubernetes Dashboard
       folder_path: dashboard
       runners: photoatom
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    secrets: inherit
 
   certificates_deploy:
     needs: dashboard_deploy
     name: Cluster Issuer and MinIO Operator Certificates Deployment onto Self Hosted K3d Cluster
-    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@main
+    uses: PhotoAtom/automations/.github/workflows/tofu-deploy.yml@feature/10/tfvars
     with:
       deployment_name: Cluster Issuer and MinIO Operator Certificates
       folder_path: certificates
       runners: photoatom
-      # post_apply_script: |
-      #
-      #   # Sleep for some time to give time for certs creation
-      #   echo "Sleeping for 30 seconds to give time for certificates creation"
-      #   sleep 30
-      #
-      #   # Restart MinIO Operator Deployment
-      #   kubectl rollout restart deployments.apps/minio-operator -n minio-operator
-      #   kubectl rollout status deployments.apps/minio-operator -n minio-operator
-    secrets:
-      KUBECONFIG: ${{ secrets.KUBECONFIG }}
+      post_apply_script: |
 
+        # Sleep for some time to give time for certs creation
+        echo "Sleeping for 30 seconds to give time for certificates creation"
+        sleep 30
+
+        # Restart MinIO Operator Deployment
+        kubectl rollout restart deployments.apps/minio-operator -n minio-operator
+        kubectl rollout status deployments.apps/minio-operator -n minio-operator
+    secrets: inherit
