@@ -81,6 +81,76 @@ resource "kubernetes_manifest" "cluster_public_issuer" {
   depends_on = [kubernetes_secret.cloudflare_token]
 }
 
+// Certificate Authority to be used with MinIO Operator
+resource "kubernetes_manifest" "minio_ca" {
+  manifest = {
+
+    "apiVersion" = "cert-manager.io/v1"
+    "kind"       = "Certificate"
+    "metadata" = {
+      "name"      = "${var.minio_operator_ca_name}"
+      "namespace" = "${var.minio_operator_namespace}"
+
+      "labels" = {
+
+        "app"       = "minio-operator"
+        "component" = "ca"
+      }
+    }
+    "spec" = {
+      "isCA" = true
+
+      "subject" = {
+        "organizations"       = ["photoatom"]
+        "countries"           = ["India"]
+        "organizationalUnits" = ["MinIO Operator"]
+      }
+      "commonName" = "operator"
+      "secretName" = "operator-ca-tls"
+      "duration"   = "70128h"
+
+      "privateKey" = {
+        "algorithm" = "ECDSA"
+        "size"      = 256
+      }
+      "issuerRef" = {
+        "name"  = "${var.cluster_issuer_name}"
+        "kind"  = "ClusterIssuer"
+        "group" = "cert-manager.io"
+      }
+    }
+  }
+
+  depends_on = [kubernetes_manifest.cluster_self_signed_issuer]
+
+}
+
+
+// Issuer for the MinIO Operator Namespace
+resource "kubernetes_manifest" "minio_issuer" {
+  manifest = {
+    "apiVersion" = "cert-manager.io/v1"
+    "kind"       = "Issuer"
+
+    "metadata" = {
+
+      "name"      = "${var.minio_operator_issuer_name}"
+      "namespace" = "${var.minio_operator_namespace}"
+      "labels" = {
+        "app"       = "minio-operator"
+        "component" = "issuer"
+      }
+    }
+    "spec" = {
+      "ca" = {
+        "secretName" = "operator-ca-tls"
+      }
+    }
+  }
+
+  depends_on = [kubernetes_manifest.minio_ca]
+}
+
 // Certificate for MinIO STS
 resource "kubernetes_manifest" "sts_certificate" {
   manifest = {
@@ -108,8 +178,7 @@ resource "kubernetes_manifest" "sts_certificate" {
       ]
       "secretName" = "sts-tls"
       "issuerRef" = {
-        "name" = "${var.cluster_issuer_name}"
-        "kind" = "ClusterIssuer"
+        "name" = "${var.minio_operator_issuer_name}"
       }
     }
   }
