@@ -58,9 +58,10 @@ jobs:
       runners: photoatom
       post_apply_script: |
 
-        # Sleep for some time to give time for certs creation
-        echo "Sleeping for 30 seconds to give time for certificates creation"
-        sleep 30
+        # Wait for certs creation
+        echo "Waiting for certificates creation"
+        kubectl wait --for=condition=Ready=true certificate/sts-certmanager-cert -n minio-operator --timeout=300s
+        kubectl wait --for=condition=Ready=true certificate/operator-ca-certificate -n minio-operator --timeout=300s
 
         # Restart MinIO Operator Deployment
         kubectl rollout restart deployments.apps/minio-operator -n minio-operator
