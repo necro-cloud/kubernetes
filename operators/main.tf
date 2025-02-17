@@ -50,3 +50,14 @@ resource "helm_release" "nginx" {
   create_namespace = var.nginx_configuration.create_namespace
 
 }
+
+// Kubernetes Replicator Configuration
+resource "helm_release" "replicator" {
+  name      = var.replicator_configuration.name
+  namespace = var.replicator_configuration.namespace
+
+  repository       = var.replicator_configuration.repository
+  chart            = var.replicator_configuration.chart
+  version          = var.replicator_configuration.version
+  create_namespace = var.replicator_configuration.create_namespace
+}

@@ -49,3 +49,16 @@ variable "nginx_configuration" {
     "create_namespace" = true
   }
 }
+
+variable "replicator_configuration" {
+  description = "Dictionary filled with Kubernetes Replicator Configuration Details"
+  type        = map(string)
+  default = {
+    "name"             = "kubernetes-replicator"
+    "namespace"        = "kubernetes-replicator"
+    "repository"       = "https://helm.mittwald.de"
+    "chart"            = "kubernetes-replicator"
+    "version"          = "2.11.0"
+    "create_namespace" = true
+  }
+}
