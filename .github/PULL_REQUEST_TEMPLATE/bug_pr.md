@@ -1,5 +1,0 @@
-- Bug Issue Reference:
-- How was it fixed:
-- Cluster is functioning properly? [ ]
-- Operators are functioning properly? [ ]
-- Plugins are functioning properly? [ ]
