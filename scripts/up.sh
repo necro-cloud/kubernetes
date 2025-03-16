@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Cluster name to check and deploy
-CLUSTER_NAME="photoatom"
+CLUSTER_NAME="cloud"
 
 # Check if cluster exists or not
 CHECK_CLUSTER_EXISTENCE=$(k3d cluster list | grep -c "$CLUSTER_NAME" || true)

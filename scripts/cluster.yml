@@ -1,7 +1,7 @@
 apiVersion: k3d.io/v1alpha5
 kind: Simple
 metadata:
-  name: photoatom
+  name: cloud
 servers: 1
 agents: 3
 kubeAPI:
@@ -32,13 +32,13 @@ options:
         nodeFilters:
           - server:*
     nodeLabels:
-      - label: worker=photoatom-0
+      - label: worker=cloud-0
         nodeFilters:
           - agent:0
-      - label: worker=photoatom-1
+      - label: worker=cloud-1
         nodeFilters:
           - agent:1
-      - label: worker=photoatom-2
+      - label: worker=cloud-2
         nodeFilters:
           - agent:2
   kubeconfig:
@@ -46,12 +46,12 @@ options:
     switchCurrentContext: true
   runtime:
     labels:
-      - label: worker=photoatom-0
+      - label: worker=cloud-0
         nodeFilters:
           - agent:0
-      - label: worker=photoatom-1
+      - label: worker=cloud-1
         nodeFilters:
           - agent:1
-      - label: worker=photoatom-2
+      - label: worker=cloud-2
         nodeFilters:
           - agent:2
