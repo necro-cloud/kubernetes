@@ -1,75 +1,26 @@
-# PhotoAtom Bootstrap Self Hosted Kubernetes Cluster
+# necronizer's cloud self hosted cluster implementation
 
-This repository mainly handles scripts for automation of setting up and destroying kubernetes cluster for usage of development of PhotoAtom. It utilized JSON based configuration to start and delete clusters.
+This repository mainly handles scripts for automation of setting up and destroying kubernetes cluster using k3s for usage with personal projects. YAML Configuration and scripts related to bringing up and down the cluster lives in this repository.
 
----
+# Requirements and Dependencies
 
-## Requirements
+The following is required to provision a kubernetes cluster using this repository:
 
-The list of requirements for utilizing this repository is:
+1. [Docker](https://www.docker.com/) - k3s runs kubernetes nodes in Docker hence Docker is required to be installed on the host machine to run kubernetes successfully.
+2. [k3d](https://k3d.io/stable/) - Lightweight wrapper around k3s running on Docker, can be used to bring up single-node and multi-node clusters easily. 
 
-- [Docker](https://www.docker.com/) - Prerequisite to Minikube as our primary driver.
-- [Minikube](https://minikube.sigs.k8s.io/docs/start/) - our clusters will be utilizing Minikube in the background to bring up and tear down Kubernetes clusters.
-- [JQ](https://github.com/jqlang/jq) - Simple JSON processing.
+# Usage Instructions:
 
-## Usage
+**Step 1:** Make sure you have installed Docker and k3d on your system since we will be using them to bring up the cluster
 
-1. Edit the [configuration](./config.json) as per your convenience, an example for the same can be found here:
+**Step 2:** Navigate yourself to the scripts folder where we have the configuration for the cluster present in the [cluster.yml](scripts/cluster.yml) file for which the reference can be found [here](https://k3d.io/stable/usage/configfile/)
 
-```json
-{
-  "cluster_name": "NAME OF THE CLUSTER",
-  "cluster_configuration": {
-    "vcpu_per_node": "NUMBER OF vCPUs TO BE DEDICATED PER NODE",
-    "ram_per_node": "RAM TO BE DEDICATED PER NODE",
-    "nodes": "NUMBER OF NODES",
-    "driver": "DRIVER OF CHOICE"
-  },
-  "plugins": ["PLUGINS TO BE ENABLED"],
-  "operators": [
-    {
-      "name": "Operator Name",
-      "steps": ["STEPS HERE"]
-    }
-  ]
-}
+**Step 3:** Grant execution permissions to the following scripts: [up.sh](scripts/up.sh) and [down.sh](scripts/down.sh) with the following command:
+```
+chmod +x up.sh
+chmod +x down.sh
 ```
 
-For operator automation, refer to [Operator Installation Automation](#operator-installation-automation) guide
+**Step 4:** To bring up the cluster, execute the [up.sh](scripts/up.sh) using the command: `bash up.sh`. Running this command will also generate the KubeConfig in your home directory as well (present in `~/.kube/config`)
 
-1. To spin up the cluster, execute the following commands in your terminal:
-
-```
-chmod +x ./scripts/up.sh
-./scripts/up.sh config.json
-```
-
-2. To tear down the cluster, execute the following commands in your terminal:
-
-```
-chmod +x ./scripts/down.sh
-./scripts/down.sh config.json
-```
-
-## Operator Installation Automation
-
-The structure to use for Operator Installation is given below:
-
-```json
-{
-  "name": "Operator Name",
-  "steps": ["STEPS HERE"]
-}
-```
-
-`name` can be any name you want to use and `steps` are all commands required for installing the Operator/CRDs. These are comma seperated strings in an array which are executed one at a time.
-
-For example, MinIO's automation looks like this:
-
-```json
-{
-  "name": "MinIO",
-  "steps": ["kubectl apply -k \"github.com/minio/operator?ref=v6.0.2\""]
-}
-```
-
+**Step 5:** To bring down the cluster, execute the [down.sh](scripts/down.sh) using the command: `bash down.sh`. Running this remove the cluster and also get rid of all containers which were running to support the uptime of the cluster.
