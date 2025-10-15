@@ -32,6 +32,9 @@ options:
         nodeFilters:
           - server:*
     nodeLabels:
+      - label: server=cloud
+        nodeFilters:
+          - server:0
       - label: worker=cloud-0
         nodeFilters:
           - agent:0
