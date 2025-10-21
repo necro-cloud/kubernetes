@@ -18,8 +18,7 @@ ports:
 
 options:
   k3d:
-    wait: true
-    timeout: "60s"
+    wait: false
     disableLoadbalancer: false
     disableImageVolume: false
     disableRollback: false
@@ -29,6 +28,12 @@ options:
   k3s:
     extraArgs:
       - arg: --disable=traefik
+        nodeFilters:
+          - server:*
+      - arg: --flannel-backend=none
+        nodeFilters:
+          - server:*
+      - arg: --disable-network-policy
         nodeFilters:
           - server:*
     nodeLabels:
