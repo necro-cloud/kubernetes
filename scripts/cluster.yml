@@ -31,6 +31,12 @@ options:
       - arg: --disable=traefik
         nodeFilters:
           - server:*
+      - arg: --flannel-backend=none
+        nodeFilters:
+          - server:*
+      - arg: --disable-network-policy
+        nodeFilters:
+          - server:*
     nodeLabels:
       - label: server=cloud
         nodeFilters:
