@@ -7,13 +7,13 @@ This repository mainly handles scripts for automation of setting up and destroyi
 The following is required to provision a kubernetes cluster using this repository:
 
 1. [Docker](https://www.docker.com/) - k3s runs kubernetes nodes in Docker hence Docker is required to be installed on the host machine to run kubernetes successfully.
-2. [k3d](https://k3d.io/stable/) - Lightweight wrapper around k3s running on Docker, can be used to bring up single-node and multi-node clusters easily. 
+2. [k3s](https://k3s.io/) - The certified Kubernetes distribution built for IoT & Edge computing, perfect for small self hosted clusters.
 
 # Usage Instructions:
 
-**Step 1:** Make sure you have installed Docker and k3d on your system since we will be using them to bring up the cluster
+**Step 1:** Make sure you have installed Docker on your system since we will be using them to bring up the cluster
 
-**Step 2:** Navigate yourself to the scripts folder where we have the configuration for the cluster present in the [cluster.yml](scripts/cluster.yml) file for which the reference can be found [here](https://k3d.io/stable/usage/configfile/)
+**Step 2:** Navigate yourself to the scripts folder where we have the configuration for the cluster present in the [compose.yml](scripts/compose.yml) file for which the extra configuration can be found [here](scripts/cluster.env)
 
 **Step 3:** Grant execution permissions to the following scripts: [up.sh](scripts/up.sh) and [down.sh](scripts/down.sh) with the following command:
 ```
