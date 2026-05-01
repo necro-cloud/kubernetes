@@ -1,0 +1,100 @@
+name: k3s-cloud
+
+# ----------- K3s Template ----------- #
+# This template will be used by the server
+# and the agents for common stuff like
+# image URI, environment variables, network
+# and resource reservations and limits
+x-k3s-template: &k3s-template
+  image: rancher/k3s:v1.35.3-k3s1
+  privileged: true
+  stop_grace_period: 120s
+  environment:
+    - K3S_TOKEN=${K3S_TOKEN}
+  networks:
+    - k3s-net
+  deploy:
+    resources:
+      limits:
+        cpus: '${K3S_CPU_LIMIT:-2.0}'
+        memory: ${K3S_MEM_LIMIT:-4G}
+      reservations:
+        cpus: '${K3S_CPU_RESERVE:-0.5}'
+        memory: ${K3S_MEM_RESERVE:-1G}
+
+services:
+
+  # Main Server Configuration
+  # for the K3s Cluster.
+  # Limited to only 1 server
+  server:
+    <<: *k3s-template
+    container_name: k3s-cloud-server
+    hostname: k3s-cloud-server
+    volumes:
+      - k3s-server-data:/var/lib/rancher/k3s
+    command: >
+      server
+      --disable=traefik
+      --flannel-backend=none
+      --disable-network-policy
+      --node-label server=cloud
+      --tls-san=127.0.0.1
+    ports:
+      - "6445:6443"
+
+  # Agent Configuration
+  # Controlled by an environment
+  # variable for the number of
+  # agents to be spin up
+  agent:
+    <<: *k3s-template
+    command: >
+      agent
+      --server https://k3s-cloud-server:6443
+      --node-label worker=cloud
+    deploy:
+      replicas: ${WORKER_NODES:-3}
+      resources:
+        limits:
+          cpus: '${K3S_CPU_LIMIT:-2.0}'
+          memory: ${K3S_MEM_LIMIT:-4G}
+        reservations:
+          cpus: '${K3S_CPU_RESERVE:-0.5}'
+          memory: ${K3S_MEM_RESERVE:-1G}
+
+  # Load Balancer for Ingress Exposure
+  loadbalancer:
+    image: nginx:alpine
+    container_name: k3s-cloud-loadbalancer
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    hostname: k3s-cloud-loadbalancer
+    ports:
+      - "80:80"
+      - "443:443"
+    command: >
+      /bin/sh -c "
+      echo '
+      events {}
+      stream {
+        server { listen 80; proxy_pass agent:80; }
+        server { listen 443; proxy_pass agent:443; }
+      }' > /etc/nginx/nginx.conf && nginx -g 'daemon off;'
+      "
+    networks:
+      - k3s-net
+    depends_on:
+      - agent
+
+# Custom Volume for Secrets Mount
+# Will prevent OS binding for volumes
+volumes:
+  k3s-server-data:
+
+networks:
+  k3s-net:
+    driver: bridge
